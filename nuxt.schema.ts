@@ -4,19 +4,19 @@ import { field, group } from '@nuxt/content/preview'
 
 /**
  * Helper function to create a social link group.
- * @param index The index of the social link.
- * @returns A group schema for the social link.
+ * @param {number} index used in the group's title/description.
+ * @returns {import('@nuxt/content/preview').GroupSchema} A configured group schema for a single social/link entry.
  */
-function createSocialLinkGroup(index: number) {
+function createLinkGroup(index: number) {
   return group({
-    title: `Social Link ${index}`,
-    description: `Configure your social media link ${index}.`,
+    title: `Link ${index}`,
+    description: `Configure link ${index}.`,
     icon: 'lucide:share-2',
     fields: {
       name: field({
         type: 'string',
         title: 'Name',
-        description: 'Name or label for this social media link.',
+        description: 'Name or label for this link.',
         default: '',
       }),
       icon: field({
@@ -29,7 +29,7 @@ function createSocialLinkGroup(index: number) {
       url: field({
         type: 'string',
         title: 'URL',
-        description: 'Destination URL for this social media link, including `https://` as prefix.',
+        description: 'Destination URL for this link, including `https://` as prefix.',
         default: '',
       }),
     },
@@ -119,10 +119,10 @@ export default defineNuxtSchema({
       description: 'Socials Customization.',
       icon: 'lucide:share-2',
       fields: Object.fromEntries(
-        // generates `social1: createSocialLinkGroup(1)`, ..., `social6: createSocialLinkGroup(6)`
+        // generates `social1: createLinkGroup(1)`, ..., `social6: createLinkGroup(6)`
         Array.from({ length: 6 }, (_, i) => i + 1).map(index => [
           `social${index}`,
-          createSocialLinkGroup(index),
+          createLinkGroup(index),
         ]),
       ),
     }),
@@ -140,10 +140,10 @@ export default defineNuxtSchema({
           default: '',
         }),
         links: Object.fromEntries(
-          // generates `link1: createSocialLinkGroup(1)`, ..., `link4: createSocialLinkGroup(4)`
+          // generates `link1: createLinkGroup(1)`, ..., `link4: createLinkGroup(4)`
           Array.from({ length: 4 }, (_, i) => i + 1).map(index => [
             `link${index}`,
-            createSocialLinkGroup(index),
+            createLinkGroup(index),
           ]),
         ),
       },
