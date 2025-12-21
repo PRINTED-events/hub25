@@ -1,0 +1,33 @@
+name: Release Please Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+jobs:
+  release_please:
+    name: Release Please Job
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - name: Checkout the Codebase
+        uses: actions/checkout@v6
+        with:
+          # ref: main # branch to checkout, but we use the provided branch by the event
+          fetch-depth: 0
+
+      - name: Release Please Action
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target-branch: main
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
