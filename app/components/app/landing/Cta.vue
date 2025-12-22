@@ -2,8 +2,9 @@
 import type { ButtonProps } from '@nuxt/ui'
 
 defineProps<{
-  title: string
-  description: string
+  title?: string
+  description?: string
+  headline?: string // TODO not used
   links?: ButtonProps[]
 }>()
 </script>

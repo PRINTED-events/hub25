@@ -2,8 +2,9 @@
 import type { ButtonProps } from '@nuxt/ui'
 
 defineProps<{
-  title: string
-  description: string
+  title?: string
+  description?: string
+  headline?: string
   links?: ButtonProps[]
 }>()
 </script>
@@ -11,6 +12,7 @@ defineProps<{
 <template>
   <UPageHero
     :description="description"
+    :headline="headline"
     :links="links"
     :title="title"
   >
