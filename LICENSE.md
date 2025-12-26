@@ -4,9 +4,13 @@
 
 This project is provided under a dual-license structure. The source code is licensed under the **MIT License**, while specific directories containing creative assets and content are subject to separate, more restrictive terms.
 
+**Legal Notice & Disclaimer:**
+
+We assume no liability for the use of this project, including all code. You are solely responsible for your use of this project. Please review the code and independently assess whether you wish to use it. Although we have developed and tested it to the best of our knowledge and conscience, we cannot guarantee it is error-free.
+
 ## MIT License (Source Code)
 
-This license applies to all files within this repository **except** for the contents of the `/content`, `/public`, and `/app/assets` directories.
+This license applies to all files within this repository **except** for the contents of the `/content` and `/public` directories.
 
 ```
 Copyright (c) 2025-present, Thorsten Seyschab
@@ -36,7 +40,6 @@ This license applies to all files located within the following directories (incl
 
 - `/content`
 - `/public`
-- `/app/assets`
 
 **All Rights Reserved.**
 
