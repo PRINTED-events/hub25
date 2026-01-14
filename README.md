@@ -1,6 +1,9 @@
 # quick-conf
 
-This is a template for quickly setting up a new Conference or Meetup website with various functionalities.
+This is a **completely free** template for quickly setting up a new Conference or Meetup website, powered by **Nuxt Studio** under the hood as a Git-based CMS. Everything included - the template itself, all dependencies, and the CMS - is available at no cost. It features **visual editors**, **live previews** directly in your browser, and an intuitive interface, making it effortless to manage content without touching code. Once set up, it is the perfect solution for non-technical users, as all content updates can be handled visually through the browser interface.
+
+> [!NOTE]
+> While the template and tools are free, hosting and deployment costs are not included and depend on your chosen provider.
 
 ## Sponsoring
 
@@ -14,7 +17,7 @@ All documentation is in the [docs](/docs) folder.
 
 ## Want to use the template for setting up a conference website?
 
-We provide a CLI tool to help you get started quickly. Please refer to the [Template Usage Documentation](/docs/template-usage.md) for detailed installation and update instructions.
+We provide a CLI tool to help you get started quickly. Please refer to the [Template Usage Documentation](/docs/template-usage.md) for getting started with detailed installation and update instructions.
 
 I would be thrilled to see how you are using this template! If you have launched a website for your conference or meetup with it, please consider adding it to the [showcase](/docs/usage.md) in this repository.
 
