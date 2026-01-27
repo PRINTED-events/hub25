@@ -11,7 +11,7 @@ import {
 } from './common'
 
 export const landingSchema = createBaseWithSeoSchema().extend({
-  blocks: z.array(
+  blocks: property(z.array(
     z.discriminatedUnion('component', [
       createLandingBlockBaseSchema().extend({
         component: z.literal('AppLandingHero'),
@@ -48,12 +48,15 @@ export const landingSchema = createBaseWithSeoSchema().extend({
       }),
       createLandingBlockBaseSchema().extend({
         component: z.literal('AppLandingSponsors'),
-        showViewAll: z.boolean().default(false).describe(
-          'Show a "View all Sponsors" button. Links to the sponsors FAQ page, which must be created manually.',
-        ),
-        viewAllLink: z.string().min(1).default('/faq/sponsors').describe(
-          'The link for the "View all Sponsors" button.',
-        ),
+        showViewAll: property(z.boolean().default(false)).editor({
+          // @ts-expect-error `description` is custom and patched in `nuxt-studio`
+          description: 'Show a "View all Sponsors" button. Links to the sponsors FAQ page, which must '
+            + 'be created manually.',
+        }),
+        viewAllLink: property(z.string().min(1).default('/faq/sponsors')).editor({
+          // @ts-expect-error `description` is custom and patched in `nuxt-studio`
+          description: 'The link for the "View all Sponsors" button.',
+        }),
       }),
       createLandingBlockBaseSchema().extend({
         component: z.literal('AppLandingCta'),
@@ -64,23 +67,46 @@ export const landingSchema = createBaseWithSeoSchema().extend({
         links: z.array(createLinkSchema()).optional(),
         image: createImageSchema().optional(),
         video: z.object({
-          src: property(z.string().min(1)).editor({ input: 'media' }),
-          poster: property(z.string().optional()).editor({ input: 'media' }),
+          src: property(z.string().min(1)).editor({
+            input: 'media',
+            // @ts-expect-error `description` is custom and patched in `nuxt-studio`
+            description: 'The source of the video.',
+          }),
+          poster: property(z.string().optional()).editor({
+            input: 'media',
+            // @ts-expect-error `description` is custom and patched in `nuxt-studio`
+            description: 'The poster image for the video.',
+          }),
         }).optional(),
-        overlayOpacity: z.number().min(0).max(1).default(0.5)
-          .describe('The opacity of the black overlay on top of the media (0-1).'),
+        overlayOpacity: property(z.number().min(0).max(1).default(0.5)).editor({
+          // @ts-expect-error `description` is custom and patched in `nuxt-studio`
+          description: 'The opacity of the black overlay on top of the media (0-1).',
+        }),
       }),
       createLandingBlockBaseSchema().extend({
         component: z.literal('AppLandingHeroCountdown'),
         links: z.array(createLinkSchema()).optional(),
-        targetDate: z.string().datetime(),
+        targetDate: property(z.string().datetime()).editor({
+          // @ts-expect-error `description` is custom and patched in `nuxt-studio`
+          description: 'The target date for the countdown (ISO format, e.g. `2026-10-15T10:00:00Z`).',
+        }),
       }),
       createLandingBlockBaseSchema().extend({
         component: z.literal('AppLandingMetaInfo'),
         items: z.array(z.object({
-          icon: property(z.string().min(1)).editor({ input: 'icon' }),
-          text: z.string().min(1),
-          label: z.string().optional(),
+          icon: property(z.string().min(1)).editor({
+            input: 'icon',
+            // @ts-expect-error `description` is custom and patched in `nuxt-studio`
+            description: 'The icon of the item.',
+          }),
+          text: property(z.string().min(1)).editor({
+            // @ts-expect-error `description` is custom and patched in `nuxt-studio`
+            description: 'The text of the item.',
+          }),
+          label: property(z.string().optional()).editor({
+            // @ts-expect-error `description` is custom and patched in `nuxt-studio`
+            description: 'The label of the item.',
+          }),
         })),
       }),
       createLandingBlockBaseSchema().extend({
@@ -105,9 +131,17 @@ export const landingSchema = createBaseWithSeoSchema().extend({
       createLandingBlockBaseSchema().extend({
         component: z.literal('AppLandingSeparator'),
         label: z.string().optional(),
-        icon: property(z.string().optional()).editor({ input: 'icon' }),
+        icon: property(z.string().optional()).editor({
+          input: 'icon',
+          // @ts-expect-error `description` is custom and patched in `nuxt-studio`
+          description: 'An optional icon for the separator.',
+        }),
         avatar: createImageSchema().optional(),
       }),
     ]),
-  ),
+  )).editor({
+    // @ts-expect-error `description` is custom and patched in `nuxt-studio`
+    description: '⚠️ NOTE: Click the little dots at the top right of the sidebar and change to "Use code editor" '
+      + 'to edit the landing page blocks properly as the visual editor does not support all features here!',
+  }),
 })
