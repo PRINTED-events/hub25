@@ -5,8 +5,9 @@ const props = defineProps<{
   title?: string
   description?: string
   headline?: string
-  links?: ButtonProps[]
+  // class?: string // works without using it due to Vue3's attribute fallthrough
   targetDate: string // ISO string or UTC date string
+  links?: ButtonProps[]
 }>()
 
 const now = ref(new Date())
