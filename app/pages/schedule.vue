@@ -1,74 +1,84 @@
 <script setup lang="ts">
-import type { SpeakersCollectionItem, StagesCollectionItem, TalksCollectionItem } from '@nuxt/content'
+const {
+  activeDayISO,
+  availableDays,
+  availableTalkTypes,
+  stages,
+  timeSlots,
+  currentTimeLineStyle,
+  getTalkStyle,
+  getTalksForStage,
+  activeTalks,
+} = await useSchedule()
 
-const route = useRoute()
+// --- SEO ---
 const { extractSeoMetadata, getSeoMetaBase } = useSeo()
 
-const [
-  { data: stages },
-  { data: speakers },
-  { data: talks },
-] = await Promise.all([
-  useAsyncData(`${route.path}-stages`, () => queryCollection('stages').all()),
-  useAsyncData(`${route.path}-speakers`, () => queryCollection('speakers').all()),
-  useAsyncData(`${route.path}-talks`, () => queryCollection('talks').all()),
-])
-
-type ProcessedDataType = Omit<TalksCollectionItem, 'speakers' | 'stage'> & {
-  speakers: SpeakersCollectionItem[]
-  stage: StagesCollectionItem | undefined
-}
-
-const processedData = computed<ProcessedDataType[]>(() => {
-  if (!talks.value || talks.value.length === 0) {
-    return []
-  }
-
-  return talks.value.map((talk) => {
-    const stage_hit = stages.value?.find(stage => stage.slug === talk.stage)
-    const speakers_hit = speakers.value?.filter(speaker =>
-      talk.speakers?.includes(speaker.slug),
-    )
-
-    return {
-      ...talk,
-      speakers: speakers_hit ?? [],
-      stage: stage_hit ?? undefined,
-    }
-  })
-})
-
-const seoMetadata = extractSeoMetadata({
+const seoMetadata = computed(() => extractSeoMetadata({
   title: 'Schedule',
-  description: 'List of talks for the event with time and stage information',
-})
-const { title, description } = seoMetadata
+  description: `Conference schedule for ${activeDayISO.value}`,
+}))
+
+const meta = computed(() => getSeoMetaBase(seoMetadata.value))
 
 useSeoMeta({
-  ...getSeoMetaBase(seoMetadata),
+  title: () => meta.value.title,
+  ogTitle: () => meta.value.ogTitle,
+  description: () => meta.value.description,
+  ogDescription: () => meta.value.ogDescription,
 })
 </script>
 
 <template>
-  <template v-if="talks">
-    <UContainer class="pt-3 pb-8">
-      <UBreadcrumb
-        :items="[
-          { label: 'Home', to: '/' },
-          { label: 'Schedule' },
-        ]"
+  <UContainer class="pt-3 pb-8">
+    <UBreadcrumb
+      :items="[
+        { label: 'Home', to: '/' },
+        { label: 'Schedule' },
+      ]"
+    />
+
+    <UPageHeader
+      description="List of talks for the event with time, speaker and stage information."
+      title="Schedule"
+    />
+
+    <!-- Day Selector -->
+    <AppScheduleDaySelector
+      v-model="activeDayISO"
+      :available-days="availableDays"
+    />
+
+    <div v-if="stages && stages.length > 0 && activeTalks.length > 0">
+      <!-- Schedule Grid -->
+      <AppScheduleGrid
+        :current-time-line-style="currentTimeLineStyle"
+        :get-talk-style="getTalkStyle"
+        :get-talks-for-stage="getTalksForStage"
+        :stages="stages"
+        :time-slots="timeSlots"
       />
 
-      <UPageHeader :description="description" :title="title" />
+      <!-- Type Legend -->
+      <AppScheduleLegend :available-talk-types="availableTalkTypes" />
+    </div>
 
-      <div v-for="talk in processedData" :key="talk.slug">
-        <ULink
-          :aria-label="`View details for ${talk.title} at ${talk.dateTime}`"
-          :to="`/talks/${talk.slug}`"
-        >
-          {{ talk.title }} at {{ talk.dateTime }}
-        </ULink>
+    <div v-else class="flex flex-col items-center justify-center gap-2 py-12 text-center">
+      <UIcon
+        class="text-3xl text-gray-300 dark:text-gray-700"
+        name="i-lucide-calendar-x-2"
+      />
+      <div class="text-lg font-medium text-gray-900 dark:text-white">
+        <span v-if="!stages || stages.length === 0">
+          No stages configured yet.
+        </span>
+        <span v-else>
+          No talks scheduled yet.
+        </span>
       </div>
-    </UContainer>
-  </template>
+      <div class="text-gray-500">
+        Check back later for updates to the schedule.
+      </div>
+    </div>
+  </UContainer>
 </template>

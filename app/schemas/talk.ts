@@ -7,7 +7,7 @@ export const talkSchema = z.object({
     description: 'The UNIQUE slug of the talk. This is used to identify and '
       + 'link the talk to other collections. Never change this!',
   }),
-  type: property(z.enum(['talk', 'lightning-talk', 'panel', 'keynote', 'workshop'])).editor({
+  type: property(z.enum(['talk', 'lightning-talk', 'panel', 'keynote', 'workshop', 'other'])).editor({
     // @ts-expect-error `description` is custom and patched in `nuxt-studio`
     description: 'The type of the talk.',
   }),
@@ -26,7 +26,12 @@ export const talkSchema = z.object({
   }),
   dateTime: property(z.coerce.date()).editor({
     // @ts-expect-error `description` is custom and patched in `nuxt-studio`
-    description: 'The date and time of the talk when it takes place.',
+    description: 'The date and time of the talk in UTC (Z) format. '
+      + 'The website will automatically convert this to the configured timezone.',
+  }),
+  duration: property(z.number().int().min(1).default(30)).editor({
+    // @ts-expect-error `description` is custom and patched in `nuxt-studio`
+    description: 'The duration of the talk in minutes.',
   }),
   stage: property(z.string().min(1)).editor({
     // @ts-expect-error `description` is custom and patched in `nuxt-studio`
