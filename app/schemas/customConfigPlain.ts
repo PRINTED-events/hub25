@@ -16,12 +16,21 @@ export function createSimpleLinkSchema() {
   })
 }
 
+export function createFooterColumnSchema() {
+  return z.object({
+    // TODO would be better `.min(1)` instead of `.optional()`, but NuxtStudio does not delete it in the UI
+    title: z.string().optional(),
+    // TODO would be better `.nonempty()` instead of `.default([])`, but NuxtStudio does not delete it in the UI
+    links: z.array(createSimpleLinkSchema()).default([]),
+  }).optional()
+}
+
 export const customConfigSchema = z.object({
   general: z.object({
     conferenceName: z.string().min(1),
     conferenceFoundingYear: z.number().default(new Date().getFullYear()),
     timeZone: z.string().default('UTC'),
-    siteUrl: z.string(),
+    siteUrl: z.url().min(1),
     logo: z.object({
       light: z.string().min(1),
       dark: z.string().min(1),
@@ -31,12 +40,19 @@ export const customConfigSchema = z.object({
       dark: z.string().min(1),
     }),
   }),
-  socials: z.array(createSimpleLinkSchema()).default([]),
-  customFooterColumn: z.object({
-    // TODO would be better `.min(1)` instead of `.optional()`, but NuxtStudio does not delete it in the UI
-    title: z.string().optional(),
-    // TODO would be better `.nonempty()` instead of `.default([])`, but NuxtStudio does not delete it in the UI
-    links: z.array(createSimpleLinkSchema()).default([]),
+  footer: z.object({
+    footerColumns: z.object({
+      column1: createFooterColumnSchema(),
+      column2: createFooterColumnSchema(),
+      column3: z.object({}).readonly().optional(),
+      column4: z.object({
+        socials: z.array(createSimpleLinkSchema()).default([]),
+      }).optional(),
+    }).optional(),
+    bottomIcons: z.object({
+      showRepositoryLink: z.boolean().default(true),
+      showAdminLink: z.boolean().default(true),
+    }).optional(),
   }).optional(),
   nuxtUI: z.object({
     colors: z.object({

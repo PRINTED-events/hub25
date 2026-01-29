@@ -13,6 +13,8 @@ This project serves as a comprehensive and **completely free** template for crea
 
 - You need a local workspace with Node.js and a package manager of your choice (pnpm, npm, bun, or yarn). Pnpm is highly recommended as the template is developed and tested with it, but others will work as well.
 - You need a Git provider to host the code. We recommend GitHub, but other Git providers will work as well.
+  > [!TIP]
+  > We highly recommend using a **public** repository. While Nuxt Studio supports private repositories, setup is more complex and prone to errors. Using a public repository aligns with the Open-Source spirit and enables community contributions (issues, PRs, etc.).
 - You need a hoster to host your website for your audience. We recommend Vercel or Netlify, but others will work as well. If you aim for Docker, you need to configure this yourself, as there is no Docker preset yet (you can contribute to the project and provide one <3).
 
 ## First Installation
@@ -96,7 +98,12 @@ For easily managing the template, we provide a CLI tool to streamline the proces
 
 2. Now you have a repository with the base code of the template online in a Git repository.
 3. Now, host your website and add a Git workflow so that your Git provider or hoster will build a new application every time your main branch has a new version (this is important for the Git-based CMS the project uses).
-4. After your website is hosted and deployed, open the deployed website with suffix `_studio` (e.g. `https://<YOUR-URL>/_studio`) and authorize your Application in your GIT provider. After that you'll be redirected back to Studio ready to edit your content.
+4. After your website is hosted and deployed, you have to log in to access the CMS for administrative functionality by doing the following:
+   1. Open the deployed website in your browser.
+   2. Then you can go on by one of the following methods:
+      1. Method 1: When `footer -> bottomIcons -> showAdminLink` is enabled, you can access the NuxtStudio CMS UI by clicking the Admin-Icon link in the footer (this is enabled by default unless you disabled showAdminLink).
+      2. Method 2 (always works): Manually add the suffix `/_admin` (e.g. `https://<YOUR-URL>/_admin`) to the URL in your browser.
+   3. Then authorize your Application in your GIT provider. After that you'll be redirected back to your website - now, ready to edit your content.
 5. Enjoy :)
 
 ### License Compliance
