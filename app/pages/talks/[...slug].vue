@@ -39,13 +39,6 @@ const [
   useAsyncData(`${route.path}-speakers`, () => queryCollection('speakers').where('slug', 'IN', slug_speakers).all()),
 ])
 
-const seoMetadata = extractSeoMetadata(talk.value)
-// const { title, description } = seoMetadata
-
-useSeoMeta({
-  ...getSeoMetaBase(seoMetadata),
-})
-
 function formatDateTime(dateTimeStr?: string): string {
   if (!dateTimeStr)
     return 'Date & time TBA'
@@ -63,6 +56,21 @@ function formatDateTime(dateTimeStr?: string): string {
 
   return `${day} at ${time} (${timeZone})`
 }
+
+const seoMetadata = extractSeoMetadata(talk.value)
+// const { title, description } = seoMetadata
+
+useSeoMeta({
+  ...getSeoMetaBase(seoMetadata),
+})
+
+defineOgImageComponent('DefaultSatori', {
+  headline: 'Talk',
+  title: seoMetadata.title,
+  description: speakers.value?.length
+    ? `Presented by ${speakers.value.map(s => s.name).join(', ')}`
+    : undefined,
+})
 </script>
 
 <template>
