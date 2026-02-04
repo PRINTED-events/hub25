@@ -12,6 +12,9 @@ import { fileURLToPath } from 'node:url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+// Ensure we are working in the script's directory
+process.chdir(__dirname)
+
 const CLI_VERSION = '1.0.0'
 const REPO_OWNER = 'toddeTV'
 const REPO_NAME = 'quick-conf'
@@ -67,8 +70,9 @@ function checkIsTemplateClone() {
 
 /**
  * Deletes all files in the current directory except .git and the script itself.
+ * @param {string[]} additionalAllowed - Additional files/folders to preserve.
  */
-function clearDirectory() {
+function clearDirectory(additionalAllowed = []) {
   // Safety check: ensure we're not in a dangerous location
   const cwd = path.resolve(process.cwd())
   const home = path.resolve(os.homedir())
@@ -80,7 +84,7 @@ function clearDirectory() {
 
   // Read and delete files and folders
   const files = fs.readdirSync(process.cwd())
-  const allowed = ['.git', path.basename(__filename)]
+  const allowed = ['.git', path.basename(__filename), ...additionalAllowed]
   for (const file of files) {
     if (allowed.includes(file))
       continue
@@ -89,41 +93,172 @@ function clearDirectory() {
 }
 
 /**
- * Cleans up template-specific files after installation.
+ * Recursively replaces a string in all files within a directory.
+ * @param {string} dir - The directory to search in.
+ * @param {string} search - The string to search for.
+ * @param {string} replacement - The string to replace with.
  */
-function cleanupTemplateFiles() {
-  log('Cleaning up template files...', 'info')
-  const toDelete = [
-    // folders
-    '.github',
-    'docs',
-
-    // files
-    '.coderabbit.yml',
-    '.release-please-manifest.json',
-    'LICENSE.md',
-    'README.md',
-    'release-please-config.json',
-    'renovate.json',
-  ]
-  for (const item of toDelete) {
-    const itemPath = path.join(process.cwd(), item)
-    if (fs.existsSync(itemPath)) {
-      fs.rmSync(itemPath, { recursive: true, force: true })
-      log(`Deleted ${item}`, 'info')
+function replaceStringInDirectory(dir, search, replacement) {
+  if (!fs.existsSync(dir))
+    return
+  const files = fs.readdirSync(dir)
+  for (const file of files) {
+    const filePath = path.join(dir, file)
+    const stat = fs.lstatSync(filePath)
+    if (stat.isSymbolicLink()) {
+      continue
+    }
+    if (stat.isDirectory()) {
+      replaceStringInDirectory(filePath, search, replacement)
+    }
+    else {
+      try {
+        let content = fs.readFileSync(filePath, 'utf-8')
+        if (content.includes(search)) {
+          content = content.replaceAll(search, replacement)
+          fs.writeFileSync(filePath, content, 'utf-8')
+        }
+      }
+      catch {
+        // ignore binary files or errors
+      }
     }
   }
 }
 
 /**
+ * Removes repository metadata files and folders that should not be in the final project.
+ * (Steps 3 & 4 of the flow)
+ */
+function removeRepoFiles() {
+  log('Removing repository files (docs, content, public, etc.)...', 'info')
+  const folders = [
+    '.github',
+    'content',
+    'docs',
+    'public',
+  ]
+  const files = [
+    '.coderabbit.yml',
+    '.release-please-manifest.json',
+    'CONTRIBUTING.md',
+    'LICENSE.md',
+    'README.md',
+    'release-please-config.json',
+    'renovate.json',
+  ]
+
+  for (const folder of folders) {
+    const itemPath = path.join(process.cwd(), folder)
+    if (fs.existsSync(itemPath)) {
+      fs.rmSync(itemPath, { recursive: true, force: true })
+    }
+  }
+  for (const file of files) {
+    const itemPath = path.join(process.cwd(), file)
+    if (fs.existsSync(itemPath)) {
+      try {
+        fs.unlinkSync(itemPath)
+      }
+      catch (e) {
+        log(`Failed to delete ${file}: ${e.message}`, 'warn')
+      }
+    }
+  }
+}
+
+/**
+ * Applies the template starter content by moving it to the root.
+ * (Steps 5, 6, 7 of Fresh Install flow)
+ * @param {string} [projectName] - The project name to replace placeholders with.
+ */
+function applyTemplateStarter(projectName) {
+  const starterPath = path.join(process.cwd(), 'template-starter')
+  if (!fs.existsSync(starterPath)) {
+    log('No template-starter found; skipping starter setup', 'info')
+    return
+  }
+
+  log('Setting up starter content...', 'info')
+
+  if (projectName) {
+    log(`Replacing placeholders with "${projectName}"...`, 'info')
+    replaceStringInDirectory(starterPath, 'ConferenceNamePlaceholder', projectName)
+  }
+
+  // Step 5: Check collisions and delete in root
+  const items = fs.readdirSync(starterPath)
+  for (const item of items) {
+    const rootPath = path.join(process.cwd(), item)
+    if (fs.existsSync(rootPath)) {
+      fs.rmSync(rootPath, { recursive: true, force: true })
+    }
+  }
+
+  // Step 6: Move files
+  for (const item of items) {
+    const src = path.join(starterPath, item)
+    const dest = path.join(process.cwd(), item)
+    fs.renameSync(src, dest)
+  }
+
+  // Step 7: Delete folder
+  fs.rmSync(starterPath, { recursive: true, force: true })
+  log('Starter content set up.', 'info')
+}
+
+/**
+ * Deletes package manager lock files to ensure a fresh dependency resolution.
+ */
+function deleteLockFiles() {
+  const lockFiles = ['package-lock.json', 'yarn.lock', 'pnpm-lock.yaml', 'bun.lockb']
+  for (const file of lockFiles) {
+    const filePath = path.join(process.cwd(), file)
+    if (fs.existsSync(filePath)) {
+      try {
+        fs.unlinkSync(filePath)
+      }
+      catch {
+        // ignore
+      }
+    }
+  }
+  log('Deleted existing lock files to ensure fresh installation.', 'info')
+}
+
+/**
+ * Prompts the user to install dependencies.
+ * @returns {Promise<void>}
+ */
+async function promptInstallDependencies() {
+  const installDeps = await askQuestion(`Do you want to run "${PACKAGE_MANAGER} install"? (y/N): `)
+  if (installDeps.toLowerCase() === 'y') {
+    const cmd = `${PACKAGE_MANAGER} install`
+    log(`Running ${cmd} ...`)
+    try {
+      execSync(cmd, { stdio: 'inherit' })
+    }
+    catch (e) {
+      log(`Failed to run install: ${e.message}`, 'error')
+    }
+  }
+  else {
+    log('Warning: Dependencies not installed.', 'warn')
+    log('A lock file is required for stable builds and dependencies are needed to run the app.', 'warn')
+    log(`Please run "${PACKAGE_MANAGER} install" manually to generate a lock file.`, 'warn')
+  }
+}
+
+/**
  * Configures the project by asking for the name and clearing metadata.
+ * @returns {Promise<string|null>} The user entered project name.
  */
 async function configureProject() {
   log('Configuring project...', 'info')
   const pkgPath = path.join(process.cwd(), 'package.json')
   if (!fs.existsSync(pkgPath)) {
     log('package.json not found, skipping configuration.', 'warn')
-    return
+    return null
   }
 
   let pkg
@@ -132,13 +267,30 @@ async function configureProject() {
   }
   catch (e) {
     log(`Failed to parse package.json: ${e.message}`, 'error')
-    return
+    return null
   }
 
-  const projectName = await askQuestion('Enter the name of your project: ')
+  const rawInput = await askQuestion('Enter the name of your project: ')
+  const cleanedProjectName = rawInput.trim().replace(/\s+/g, ' ')
+
+  if (!cleanedProjectName) {
+    log('Project name cannot be empty.', 'error')
+    return null
+  }
+
+  const pkgName = cleanedProjectName
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '')
+
+  if (!pkgName) {
+    log('Project name yields an invalid package.json name.', 'error')
+    return null
+  }
 
   // Update package.json fields
-  pkg.name = projectName
+  pkg.name = pkgName
   pkg.author = ''
   pkg.contributors = []
   pkg.description = ''
@@ -148,7 +300,9 @@ async function configureProject() {
   delete pkg.isQuickConfTemplate
 
   fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2))
-  log(`Updated package.json with name "${projectName}" and cleared metadata.`, 'success')
+  log(`Updated package.json with name "${pkgName}" and cleared metadata.`, 'success')
+
+  return cleanedProjectName
 }
 
 /**
@@ -158,13 +312,12 @@ async function showLicenseWarning() {
   console.log(`\n${'='.repeat(50)}`)
   log('LICENSE COMPLIANCE WARNING', 'warn')
   console.log('='.repeat(50))
-  console.log('The /content and /public folders in this template contain example data,')
+  console.log('The \'/content\' and \'/public\' folders in this template contain example data,')
   console.log('including images and text, which are not covered under the MIT license of the code.')
-  console.log('\nImportant: You must replace all example content in the /content and /public')
+  console.log('\nImportant: You must replace all example content in \'/content\' and \'/public\'')
   console.log('folders with your own assets and information to ensure you are not infringing')
   console.log('on any copyrights or usage rights associated with the placeholder data.')
-  console.log('\nNote: The files public/robots.txt and public/custom-styles.css must exist')
-  console.log('for the project to function, but you must replace their placeholder content.')
+  console.log('\nNote: The file \'public/custom-styles.css\' must exist.')
   console.log(`${'='.repeat(50)}\n`)
 
   await askQuestion('Press Enter to confirm you have read and understood this warning...')
@@ -484,6 +637,7 @@ async function freshInstall(isTemplateClone = false) {
       return
 
     log('Clearing directory...', 'warn')
+    // Step 1: Clear directory
     clearDirectory()
   }
   else {
@@ -501,6 +655,7 @@ async function freshInstall(isTemplateClone = false) {
   }
 
   try {
+    // Step 2: Download Everything
     log('Fetching latest release info...')
     const latestRelease = await fetchJson(`${GITHUB_API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest`)
     const tarballUrl = latestRelease.tarball_url
@@ -509,7 +664,6 @@ async function freshInstall(isTemplateClone = false) {
     const tempTar = path.join(__dirname, 'temp_install.tar.gz')
     await downloadFile(tarballUrl, tempTar)
 
-    // Extract to temp dir first to avoid overwriting current files directly (especially the CLI tool)
     const tempDir = path.join(__dirname, '.install_temp')
     if (fs.existsSync(tempDir))
       fs.rmSync(tempDir, { recursive: true, force: true })
@@ -520,36 +674,36 @@ async function freshInstall(isTemplateClone = false) {
     fs.unlinkSync(tempTar)
 
     log('Installing files...')
-    // Copy files from tempDir to __dirname, excluding quick-conf-cli.mjs
     const extractedFiles = fs.readdirSync(tempDir)
     for (const file of extractedFiles) {
       if (file === 'quick-conf-cli.mjs')
         continue // Skip overwriting the CLI tool
 
-      const srcPath = path.join(tempDir, file)
-      const destPath = path.join(__dirname, file)
-      fs.cpSync(srcPath, destPath, { recursive: true, force: true })
+      const src = path.join(tempDir, file)
+      const dest = path.join(process.cwd(), file)
+      // Move to root
+      fs.renameSync(src, dest)
     }
 
     // Cleanup
     fs.rmSync(tempDir, { recursive: true, force: true })
-
     log('Installation files downloaded.', 'success')
 
-    // Post-install cleanup and config
-    cleanupTemplateFiles()
-    await configureProject()
+    const projectName = await configureProject()
+
+    if (!projectName)
+      throw new Error('Project configuration failed.')
+
+    // Step 3 & 4: Remove Repo Files
+    removeRepoFiles()
+
+    // Step 5, 6, 7: Apply Template Starter
+    applyTemplateStarter(projectName)
+
     await showLicenseWarning()
 
-    const installDeps = await askQuestion(`Do you want to run "${PACKAGE_MANAGER} install"? (y/N): `)
-    if (installDeps.toLowerCase() === 'y') {
-      log(`Running ${PACKAGE_MANAGER} install...`)
-      let cmd = `${PACKAGE_MANAGER} install`
-      if (PACKAGE_MANAGER === 'pnpm') {
-        cmd += ' --frozen-lockfile --prefer-offline'
-      }
-      execSync(cmd, { stdio: 'inherit' })
-    }
+    deleteLockFiles()
+    await promptInstallDependencies()
 
     log('Fresh installation complete!', 'success')
   }
@@ -566,200 +720,137 @@ async function freshInstall(isTemplateClone = false) {
 async function updateTemplate() {
   log('Starting update process...')
 
-  // Capture current project metadata before update
-  const currentMetadata = {
-    name: 'quick-conf',
-    author: '',
-    contributors: [],
-    description: '',
-    repository: {},
-    bugs: {},
-    keywords: [],
+  // Step 1: Backup to .update_temp
+  const updateTemp = path.join(__dirname, '.update_temp')
+
+  if (fs.existsSync(updateTemp))
+    fs.rmSync(updateTemp, { recursive: true, force: true })
+  fs.mkdirSync(updateTemp)
+  const backupDir = path.join(updateTemp, 'backup')
+  fs.mkdirSync(backupDir)
+
+  log('Backing up user files...', 'info')
+
+  const moveIfExists = (srcRel, destRel) => {
+    const src = path.join(process.cwd(), srcRel)
+    const dest = path.join(backupDir, destRel)
+    if (fs.existsSync(src)) {
+      const destParent = path.dirname(dest)
+      if (!fs.existsSync(destParent))
+        fs.mkdirSync(destParent, { recursive: true })
+      fs.renameSync(src, dest)
+      return true
+    }
+    return false
   }
 
-  try {
-    const pkgPath = path.join(process.cwd(), 'package.json')
-    if (fs.existsSync(pkgPath)) {
-      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'))
-      if (pkg.name)
-        currentMetadata.name = pkg.name
-      if (pkg.author)
-        currentMetadata.author = pkg.author
-      if (pkg.contributors)
-        currentMetadata.contributors = pkg.contributors
-      if (pkg.description)
-        currentMetadata.description = pkg.description
-      if (pkg.repository)
-        currentMetadata.repository = pkg.repository
-      if (pkg.bugs)
-        currentMetadata.bugs = pkg.bugs
-      if (pkg.keywords)
-        currentMetadata.keywords = pkg.keywords
+  // Preserve user content based on "Preserve Map" strategy
+  moveIfExists('.github', '.github')
+  moveIfExists('content', 'content')
+  moveIfExists('public', 'public')
+  moveIfExists('.env', '.env')
+  moveIfExists('LICENSE.md', 'LICENSE.md')
+  moveIfExists('README.md', 'README.md')
+  // Preserve configuration files
+  moveIfExists('.gitignore', '.gitignore')
+  moveIfExists('.npmrc', '.npmrc')
+  moveIfExists('.vscode/settings.json', '.vscode/settings.json')
+
+  // Handle package.json metadata separately later, but we need to read it now
+  let oldPkg = null
+  const pkgPath = path.join(process.cwd(), 'package.json')
+  if (fs.existsSync(pkgPath)) {
+    try {
+      oldPkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'))
+    }
+    catch (e) {
+      log(`Could not read current package.json: ${e.message}`, 'warn')
     }
   }
-  catch (e) {
-    log(`Could not read current package.json: ${e.message}`, 'warn')
-  }
+
+  // Step 2: Clear root (except cli, .git, .update_temp)
+  log('Clearing directory for update...', 'warn')
+  clearDirectory(['.update_temp'])
 
   try {
-    // 1. Download
+    // Step 3: Download Everything
     log('Fetching latest release info...')
     const latestRelease = await fetchJson(`${GITHUB_API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest`)
     const tarballUrl = latestRelease.tarball_url
 
-    const tempDir = path.join(__dirname, '.update_temp')
-    if (fs.existsSync(tempDir))
-      fs.rmSync(tempDir, { recursive: true, force: true })
-    fs.mkdirSync(tempDir)
-
-    const tempTar = path.join(tempDir, 'source.tar.gz')
+    const tempTar = path.join(updateTemp, 'temp_update.tar.gz')
     log(`Downloading release ${latestRelease.tag_name}...`)
     await downloadFile(tarballUrl, tempTar)
 
-    // 2. Extract
-    const extractDir = path.join(tempDir, 'extracted')
+    const extractDir = path.join(updateTemp, 'extracted')
     fs.mkdirSync(extractDir)
-    log('Extracting update...')
+    log(`Extracting release ${latestRelease.tag_name}...`)
     extractTarball(tempTar, extractDir)
+    fs.unlinkSync(tempTar)
 
-    // 3. Preserve & Backup
-    const backupDir = path.join(tempDir, 'backup')
-    fs.mkdirSync(backupDir)
-
-    log('Backing up user files...')
-
-    // Helper to move if exists
-    const moveIfExists = (srcRel, destRel) => {
-      const src = path.join(__dirname, srcRel)
-      const dest = path.join(backupDir, destRel)
-      if (fs.existsSync(src)) {
-        const destParent = path.dirname(dest)
-        if (!fs.existsSync(destParent))
-          fs.mkdirSync(destParent, { recursive: true })
-        fs.renameSync(src, dest)
-        return true
-      }
-      return false
-    }
-
-    // Specific preservations
-    const preservedMap = {}
-    if (moveIfExists('content', 'content'))
-      preservedMap.content = true
-    if (moveIfExists('public', 'public'))
-      preservedMap.public = true
-    if (moveIfExists('.env', '.env'))
-      preservedMap['.env'] = true
-    if (moveIfExists('.github', '.github'))
-      preservedMap['.github'] = true
-    if (moveIfExists('README.md', 'README.md'))
-      preservedMap['README.md'] = true
-    if (moveIfExists('LICENSE.md', 'LICENSE.md'))
-      preservedMap['LICENSE.md'] = true
-    // .git is handled by not deleting it in step 4
-
-    // 4. Delete Root (except preserved and script itself)
-    log('Cleaning up old files...')
-    const files = fs.readdirSync(__dirname)
-    for (const file of files) {
-      if (file === 'quick-conf-cli.mjs')
-        continue
-      if (file === '.git')
-        continue
-      if (file === '.gitignore')
-        continue // Keep gitignore just in case
-      if (file === '.update_temp')
-        continue
-
-      // If we already moved it to backup, it's gone from root, so no need to delete.
-      // But we need to be careful not to delete things we want to keep but didn't move (like .git).
-
-      const filePath = path.join(__dirname, file)
-      if (fs.existsSync(filePath)) { // Check existence again
-        fs.rmSync(filePath, { recursive: true, force: true })
-      }
-    }
-
-    // 5. Install New Files
-    log('Installing new files...')
-    // We need to copy from extractDir to __dirname
-    // But we must NOT overwrite if we are going to restore from backup?
-    // Actually, we want to overwrite everything with new version, THEN restore user content.
-
-    // Recursive copy function since fs.cpSync is Node 16.7+ (we assume recent node, but let's be safe or use cp -r)
-    // Using fs.cpSync for cross-platform compatibility (Windows/Linux/macOS)
+    // Move extracted files to root
     const extractedFiles = fs.readdirSync(extractDir)
     for (const file of extractedFiles) {
       if (file === 'quick-conf-cli.mjs')
-        continue // Skip overwriting the CLI tool
+        continue
 
-      const srcPath = path.join(extractDir, file)
-      const destPath = path.join(__dirname, file)
-      fs.cpSync(srcPath, destPath, { recursive: true, force: true })
+      const src = path.join(extractDir, file)
+      const dest = path.join(process.cwd(), file)
+      fs.renameSync(src, dest)
     }
 
-    // 6. Cleanup Template Files (remove docs etc. that came with fresh install)
-    cleanupTemplateFiles()
+    // Step 4: Remove Repo Files AND template-starter
+    removeRepoFiles()
+    const starterPath = path.join(process.cwd(), 'template-starter')
+    if (fs.existsSync(starterPath)) {
+      fs.rmSync(starterPath, { recursive: true, force: true })
+    }
 
-    // 7. Restore Backup
-    log('Restoring user files...')
-    const restore = (backupRel, destRel) => {
-      const src = path.join(backupDir, backupRel)
-      const dest = path.join(__dirname, destRel)
-      if (fs.existsSync(src)) {
-        // If destination exists (from fresh install), remove it first to replace with user backup
-        if (fs.existsSync(dest)) {
-          fs.rmSync(dest, { recursive: true, force: true })
+    // Step 5: Restore package.json metadata
+    if (oldPkg) {
+      const newPkgPath = path.join(process.cwd(), 'package.json')
+      if (fs.existsSync(newPkgPath)) {
+        try {
+          const newPkg = JSON.parse(fs.readFileSync(newPkgPath, 'utf-8'))
+          newPkg.name = oldPkg.name
+          newPkg.author = oldPkg.author
+          newPkg.contributors = oldPkg.contributors
+          newPkg.description = oldPkg.description
+          newPkg.keywords = oldPkg.keywords
+          newPkg.bugs = oldPkg.bugs
+          newPkg.repository = oldPkg.repository
+          delete newPkg.isQuickConfTemplate
+          fs.writeFileSync(newPkgPath, JSON.stringify(newPkg, null, 2))
+          log('Restored project metadata.', 'success')
         }
-        // Ensure parent exists
-        const destParent = path.dirname(dest)
-        if (!fs.existsSync(destParent))
-          fs.mkdirSync(destParent, { recursive: true })
-
-        fs.renameSync(src, dest)
+        catch (e) {
+          log(`Failed to restore project metadata: ${e.message}`, 'error')
+        }
       }
     }
 
-    if (preservedMap.content)
-      restore('content', 'content')
-    if (preservedMap.public)
-      restore('public', 'public')
-    if (preservedMap['.env'])
-      restore('.env', '.env')
-    if (preservedMap['.github'])
-      restore('.github', '.github')
-    if (preservedMap['README.md'])
-      restore('README.md', 'README.md')
-    if (preservedMap['LICENSE.md'])
-      restore('LICENSE.md', 'LICENSE.md')
-
-    // 8. Cleanup
-    log('Cleaning up temp files...')
-    fs.rmSync(tempDir, { recursive: true, force: true })
-
-    // 9. Configure Project (Restore name and clear metadata)
-    // We need to manually set the name back to what it was
-    const pkgPath = path.join(process.cwd(), 'package.json')
-    if (fs.existsSync(pkgPath)) {
-      try {
-        const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'))
-        // Restore metadata
-        pkg.name = currentMetadata.name
-        pkg.author = currentMetadata.author
-        pkg.contributors = currentMetadata.contributors
-        pkg.description = currentMetadata.description
-        pkg.repository = currentMetadata.repository
-        pkg.bugs = currentMetadata.bugs
-        pkg.keywords = currentMetadata.keywords
-        delete pkg.isQuickConfTemplate
-
-        fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2))
-        log(`Restored project metadata.`, 'success')
-      }
-      catch (e) {
-        log(`Failed to restore project metadata: ${e.message}`, 'error')
+    // Step 6 & 7: Restore Backup
+    log('Restoring user files...')
+    const backupItems = fs.readdirSync(backupDir)
+    for (const item of backupItems) {
+      // Step 6: Delete collisions from root (clean slate matching backup)
+      const rootPath = path.join(process.cwd(), item)
+      if (fs.existsSync(rootPath)) {
+        fs.rmSync(rootPath, { recursive: true, force: true })
       }
     }
+    // Step 7: Move backup to root
+    for (const item of backupItems) {
+      const src = path.join(backupDir, item)
+      const dest = path.join(process.cwd(), item)
+      fs.renameSync(src, dest)
+    }
+
+    // Step 8: Delete .update_temp
+    fs.rmSync(updateTemp, { recursive: true, force: true })
+
+    deleteLockFiles()
+    await promptInstallDependencies()
 
     log('Update complete!', 'success')
   }
