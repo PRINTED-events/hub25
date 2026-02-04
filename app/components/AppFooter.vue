@@ -107,6 +107,15 @@ const {
   icon: repositoryIcon,
   label: repositoryLabel,
 } = getRepositoryDetails(appConfig.studio.repository)
+
+/**
+ * Perform a hard page reload to the admin area.
+ * This ensures the route is intercepted correctly by Nuxt Studio (e.g. for GitHub/GitLab login)
+ * instead of being handled by the Nuxt app's client-side router, as we need a page reload here.
+ */
+function navigateToAdmin() {
+  window.location.href = '/_admin'
+}
 </script>
 
 <template>
@@ -173,8 +182,8 @@ const {
         aria-label="Admin Area"
         color="neutral"
         icon="i-lucide-log-in"
-        to="/_admin"
         variant="ghost"
+        @click="navigateToAdmin"
       />
 
       <UButton
