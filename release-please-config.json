@@ -17,6 +17,9 @@
       "extra-files": [
         "docs/README.md"
       ],
+      "extra-labels": [
+        "release-candidate"
+      ],
       "include-component-in-tag": false,
       "include-v-in-tag": true,
       "pull-request-title-pattern": "chore: release v${version}",
