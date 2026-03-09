@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+@import '@nuxt/ui';
+
+@import '../../../public/custom-styles.css';
+
+@source "../../../content/**/*";
+@source "../../../public/**/*";
+
+@theme static {
+  --breakpoint-xs: 480px;
+}
