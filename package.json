@@ -44,7 +44,7 @@
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 nuxt build",
     "dev": "nuxt dev",
     "dev:preset": "nuxt dev --port 3000 --public",
-    "fix": "run-s fix:*",
+    "fix": "run-s \"fix:*\"",
     "fix:lint-format": "run-s \"test:lint-format --fix\"",
     "generate": "cross-env NODE_OPTIONS=--max-old-space-size=8192 nuxt generate",
     "nuxi": "nuxi",
@@ -52,10 +52,13 @@
     "postinstall": "nuxt prepare",
     "preview": "nuxt preview",
     "reset": "rimraf node_modules .nuxt .output dist .data",
-    "test": "run-s test:*",
+    "test": "run-s \"test:*\"",
     "test:lint-format": "eslint .",
     "test:renovate": "renovate-config-validator",
-    "test:types": "nuxt typecheck"
+    "test:types": "nuxt typecheck",
+    "vercel:node-check": "node -e \"const major=Number(process.versions.node.split('.')[0]);if(major!==24){console.error('Node 24.x is required for Vercel builds.');console.error('Set your Vercel Project Node.js Version to 24.x and redeploy.');process.exit(1)}\"",
+    "vercel:install": "pnpm run vercel:node-check && pnpm i --frozen-lockfile --prefer-offline",
+    "vercel:build": "pnpm run vercel:node-check && pnpm run build"
   },
   "dependencies": {
     "nuxt": "~4.3.1",
@@ -92,23 +95,5 @@
     "vue-router": "~4.6.4",
     "vue-tsc": "~3.2.6",
     "zod": "~4.3.6"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "@tailwindcss/oxide",
-      "better-sqlite3",
-      "core-js-pure",
-      "dtrace-provider",
-      "esbuild",
-      "protobufjs",
-      "re2",
-      "sharp",
-      "unrs-resolver",
-      "vue-demi"
-    ],
-    "patchedDependencies": {
-      "nuxt-studio": "patches/nuxt-studio.patch"
-    }
   }
 }
