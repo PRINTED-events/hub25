@@ -31,6 +31,7 @@ export const customConfigSchema = z.object({
     conferenceFoundingYear: z.number().default(new Date().getFullYear()),
     timeZone: z.string().default('UTC'),
     siteUrl: z.url().min(1),
+    colorMode: z.enum(['both', 'light-only', 'dark-only']).default('both'),
     logo: z.object({
       light: z.string().min(1),
       dark: z.string().min(1),

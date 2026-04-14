@@ -2,6 +2,7 @@
 
 import type { CustomConfig } from './app/schemas/customConfigPlain'
 import { customConfigSchema } from './app/schemas/customConfigPlain'
+import { getColorModeSetting, resolveColorModePolicy } from './app/utils/color-mode'
 import { formatCustomConfigValidationErrors } from './app/utils/custom-config-validation'
 import _customConfig from './content/0.custom-config.json'
 
@@ -14,6 +15,11 @@ if (!parseResult.success) {
 }
 
 const customConfig = (parseResult.success ? parseResult.data : _customConfig) as CustomConfig
+
+const configuredColorMode = customConfig?.general?.colorMode as string | undefined
+const resolvedColorModePolicy = resolveColorModePolicy(configuredColorMode)
+
+const selectedColorModeSetting = getColorModeSetting(resolvedColorModePolicy)
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -82,6 +88,14 @@ export default defineNuxtConfig({
         strict: true,
       },
     },
+  },
+
+  colorMode: { // for `@nuxt/color-mode` (included in `@nuxt/ui`)
+    preference: selectedColorModeSetting.preference,
+    fallback: selectedColorModeSetting.fallback,
+
+    // Keep mode-specific storage keys so old persisted preferences do not override a new forced mode policy.
+    storageKey: `quick-conf-color-mode-${resolvedColorModePolicy}`,
   },
 
   ui: { // for `@nuxt/ui`

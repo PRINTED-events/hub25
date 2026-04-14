@@ -34,6 +34,10 @@ export const customConfigSchema = z.object({
       // @ts-expect-error `description` is custom and patched in `nuxt-studio`
       description: 'The public URL of the website (e.g. `https://my-conference.com`).',
     }),
+    colorMode: property(z.enum(['both', 'light-only', 'dark-only']).default('both')).editor({
+      // @ts-expect-error `description` is custom and patched in `nuxt-studio`
+      description: 'Color mode behavior for the website: allow switching (`both`) or lock it to one mode.',
+    }),
     logo: property(z.object({
       light: property(z.string().min(1)).editor({
         input: 'media',
