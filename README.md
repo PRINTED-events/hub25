@@ -7,21 +7,26 @@ This is a **completely free** template for quickly setting up a new Conference o
 
 ## 🚀 Key Features
 
-- **🎨 Customizable**: Fully theming via [Nuxt UI](https://ui.nuxt.com) and configuration files - your colors, your style!
-- **📝 CMS Integration**: [Nuxt Studio](https://nuxt.studio) ready for visual editing - directly in the browser!
 - **⚡ Modern Stack**: [Nuxt 4](https://nuxt.com), [Vue 3](https://vuejs.org), [Tailwind CSS 4](https://tailwindcss.com), [TypeScript](https://www.typescriptlang.org).
-- **🖥️ Unified Display Mode**: One `/display` page for stage-focused signage and full timetable mode with shareable URL settings.
+- **🎨 Customizable**: Fully themeable via [Nuxt UI](https://ui.nuxt.com) and configuration files - your colors, your style!
+- **📝 Git-Based CMS Editing**: [Nuxt Studio](https://nuxt.studio) ready for visual editing, live preview, and content updates directly in the browser.
 - **🔍 SEO Ready**: Pre-configured via [Nuxt SEO](https://nuxtseo.com/) with:
   - ✅ Automatic **Sitemap** (`/sitemap.xml`)
   - ✅ Dynamic **OG Images** (Social Cards) for speakers, talks & pages
   - ✅ Smart **Robots.txt** (Blocks AI Bots, permits legitimate crawlers)
   - ✅ JSON-LD Structured Data
+- **🖥️ Venue-Ready Display Mode**: One `/display` route with three modes (`timetable`, `all-details`, `stage-details`) for hallways, foyers, and stage-focused room screens.
+- **📅 Timezone-Aware Schedule**: Talks are normalized from UTC to the configured event timezone for accurate schedule and display output.
+- **🧩 Modular Landing Blocks**: Build pages from reusable content blocks managed in collections.
+- **✅ Schema-Validated Content**: [Nuxt Content](https://content.nuxt.com) collections are validated with [Zod](https://zod.dev) schemas for talks, speakers, stages, sponsors, tickets, FAQ, and pages.
 
 ## 🌐 Live Demo
 
 You can find a deployed version of this template to test and view here:
 
 🔗 Demo: [https://quick-conf.com/](https://quick-conf.com/)
+
+> The deployed demo runs from the repository [toddeTV/quick-conf-demo](https://github.com/toddeTV/quick-conf-demo). That repository is a practical usage example of this template and shows one real project setup based on `quick-conf`.
 
 🎥 Video: [Showcase Video](https://youtu.be/uh-Rys6nTKI)
 
