@@ -42,6 +42,28 @@ blocks:
         text: 6+ Speakers
         label: Content
 
+  - component: AppLandingMarquee
+    direction: left
+    speed: 40
+    gap: 20
+    images:
+      - src: /gallery/printedhub25-007.jpg
+        alt: PRINTED Hub 2025
+      - src: /gallery/printedhub25-021.jpg
+        alt: PRINTED Hub 2025
+      - src: /gallery/printedhub25-040.jpg
+        alt: PRINTED Hub 2025
+      - src: /gallery/printedhub25-055.jpg
+        alt: PRINTED Hub 2025
+      - src: /gallery/printedhub25-080.jpg
+        alt: PRINTED Hub 2025
+      - src: /gallery/printedhub25-100.jpg
+        alt: PRINTED Hub 2025
+      - src: /gallery/printedhub25-116.jpg
+        alt: PRINTED Hub 2025
+      - src: /gallery/printedhub25-131.jpg
+        alt: PRINTED Hub 2025
+
   - component: AppLandingSpeakers
     title: Those who shared their knowledge.
     description: Thank you to all our speakers.

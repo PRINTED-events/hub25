@@ -13,9 +13,9 @@ const items = computed(() => [
     active: route.path.startsWith('/speakers'),
   },
   {
-    label: 'Location',
-    to: '/faq/location',
-    active: route.path.startsWith('/faq/location'),
+    label: 'Gallery',
+    to: '/gallery',
+    active: route.path.startsWith('/gallery'),
   },
   {
     label: 'FAQ',
@@ -44,31 +44,12 @@ const items = computed(() => [
     </template>
 
     <template #right>
-      <UColorModeButton />
-
-      <UButton
-        aria-label="Buy tickets"
-        class="lg:hidden"
-        color="neutral"
-        icon="i-lucide-ticket"
-        title="Buy tickets"
-        to="/tickets"
-        variant="ghost"
-      />
-
       <UButton
         class="hidden lg:inline-flex"
         color="primary"
-        label="Apply as Speaker"
-        to="/faq/cfp"
-        variant="outline"
-      />
-
-      <UButton
-        class="hidden lg:inline-flex"
-        color="primary"
-        label="Buy Tickets"
-        to="/tickets"
+        label="PRINTED Hub 2026"
+        to="https://printed-europe.com"
+        target="_blank"
         variant="solid"
       />
     </template>
@@ -86,17 +67,10 @@ const items = computed(() => [
         block
         class="mb-3"
         color="primary"
-        label="Buy Tickets"
-        to="/tickets"
-      />
-
-      <UButton
-        block
-        class="mb-3"
-        color="primary"
-        label="Apply as Speaker"
-        to="/faq/cfp"
-        variant="subtle"
+        label="PRINTED Hub 2026"
+        to="https://printed-europe.com"
+        target="_blank"
+        variant="solid"
       />
     </template>
   </UHeader>
