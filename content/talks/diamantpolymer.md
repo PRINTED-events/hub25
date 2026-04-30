@@ -3,7 +3,8 @@ slug: diamantpolymer
 type: talk
 title: 'Mehr als nur Oberflächenschutz: Versiegelung im 3D-Druck'
 speakers:
-  - diamantpolymer
+  - andreasingenwardt
+  - kevinkias
 dateTime: '2025-09-27T09:15:00.000Z'
 duration: 15
 stage: stage-main
