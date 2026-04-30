@@ -2,6 +2,9 @@
 slug: roman-rackwitz
 type: talk
 title: 'Warum Likes nicht reichen: die wahren Mechanismen von Community-Motivation'
+image:
+  src: /gallery/printedhub25-107.jpg
+  alt: Roman Rackwitz on stage at PRINTED Hub 2025
 speakers:
   - romanrackwitz
 dateTime: '2025-09-27T13:15:00.000Z'

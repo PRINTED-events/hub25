@@ -30,7 +30,7 @@ blocks:
     headline: PRINTED Hub 2025
     items:
       - icon: i-lucide-calendar
-        text: 27.–28. Sep 2025
+        text: 30. Aug 2025
         label: Date
       - icon: i-lucide-map-pin
         text: Rüdesheim am Rhein
@@ -64,6 +64,15 @@ blocks:
       - src: /gallery/printedhub25-131.jpg
         alt: PRINTED Hub 2025
 
+  - component: AppLandingSection
+    title: Two days of community.
+    description: Makers, creators and engineers coming together in Rüdesheim am Rhein.
+    headline: PRINTED Hub 2025
+    orientation: horizontal
+    image:
+      src: /gallery/printedhub25-060.jpg
+      alt: Attendees at PRINTED Hub 2025
+
   - component: AppLandingSpeakers
     title: Those who shared their knowledge.
     description: Thank you to all our speakers.
@@ -74,14 +83,36 @@ blocks:
     description: Thanks to our sponsors & partners.
     headline: Sponsors
 
+  - component: AppLandingMarquee
+    direction: right
+    speed: 35
+    gap: 20
+    images:
+      - src: /gallery/printedhub25-010.jpg
+        alt: PRINTED Hub 2025
+      - src: /gallery/printedhub25-029.jpg
+        alt: PRINTED Hub 2025
+      - src: /gallery/printedhub25-044.jpg
+        alt: PRINTED Hub 2025
+      - src: /gallery/printedhub25-061.jpg
+        alt: PRINTED Hub 2025
+      - src: /gallery/printedhub25-083.jpg
+        alt: PRINTED Hub 2025
+      - src: /gallery/printedhub25-101.jpg
+        alt: PRINTED Hub 2025
+      - src: /gallery/printedhub25-119.jpg
+        alt: PRINTED Hub 2025
+      - src: /gallery/printedhub25-123.jpg
+        alt: PRINTED Hub 2025
+
   - component: AppLandingHeroMedia
     title: Meet like-minded people
     description: Immerse yourself.
     headline: Atmosphere
     overlayOpacity: 0.5
     image:
-      src: /printedhub25317.jpg
-      alt: Event Crowd
+      src: /gallery/printedhub25-095.jpg
+      alt: Event Crowd at PRINTED Hub 2025
     links:
       - label: Aftermovie PRINTED Hub 2025
         icon: i-lucide-play

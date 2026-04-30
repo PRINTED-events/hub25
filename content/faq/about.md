@@ -12,11 +12,15 @@ PRINTED Hub 2025 was the first edition of the PRINTED Hub – a community event 
 
 The event brought together makers, creators, engineers, and companies for two days of talks, workshops, and networking.
 
+![PRINTED Hub 2025](/gallery/printedhub25-052.jpg)
+
 ## What happened at the event?
 
 - **Talks on the Main Stage** – Speakers from the 3D printing community shared insights, projects, and experiences. All recorded talks are available on our [YouTube channel](https://www.youtube.com/@printed-europe).
 - **Networking** – Connecting with like-minded people was a key part of the event.
 - **Sponsors & Exhibitors** – Companies presented their products and solutions.
+
+![PRINTED Hub 2025](/gallery/printedhub25-090.jpg)
 
 ## Will there be another event?
 

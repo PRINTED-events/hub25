@@ -8,6 +8,8 @@ order: 2
 
 Nestled at the gateway to the UNESCO World Heritage Upper Middle Rhine Valley, Rüdesheim offered a unique blend of romantic vineyards and vibrant culture. With its world-class Riesling and historic charm, it provided the perfect scenic backdrop for PRINTED Hub 2025.
 
+![PRINTED Hub 2025 Venue](/gallery/printedhub25-014.jpg)
+
 ### Asbachgasse – The Venue
 
 **Industrial Heritage meets Modern Creativity**
@@ -20,6 +22,8 @@ Located on the grounds of the former Asbach distillery, **Asbachgasse** is a rev
 - **Prime Location:** Easily accessible in the heart of the Rheingau.
 
 ---
+
+![PRINTED Hub 2025 Venue](/gallery/printedhub25-027.jpg)
 
 ### Getting There
 
