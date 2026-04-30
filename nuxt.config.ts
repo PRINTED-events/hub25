@@ -43,6 +43,11 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
   ],
 
+  colorMode: {
+    preference: 'dark',
+    fallback: 'dark',
+  },
+
   runtimeConfig: {
     public: {
       demoMode: false,

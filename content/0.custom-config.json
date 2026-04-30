@@ -1,68 +1,45 @@
 {
   "footer": {
     "bottomIcons": {
-      "showAdminLink": true,
-      "showRepositoryLink": true
+      "showAdminLink": false,
+      "showRepositoryLink": false
     },
     "footerColumns": {
       "column1": {
         "links": [
           {
-            "name": "Apply as Speaker",
-            "url": "/faq/cfp"
-          },
-          {
-            "name": "Become a Sponsor",
-            "url": "/faq/sponsoring"
-          },
-          {
-            "name": "Code of Conduct",
-            "url": "/faq/code-of-conduct"
-          },
-          {
-            "name": "Location",
-            "url": "/faq/location"
+            "name": "PRINTED Hub 2026",
+            "url": "https://printed-europe.com",
+            "icon": "i-lucide-arrow-right"
           }
         ],
-        "title": "Community"
+        "title": "Next Event"
       },
       "column2": {
-        "links": [
-          {
-            "icon": "i-lucide-github",
-            "name": "Template Documentation",
-            "url": "https://github.com/toddeTV/quick-conf/tree/main/docs"
-          },
-          {
-            "icon": "i-lucide-github",
-            "name": "GitHub Repository",
-            "url": "https://github.com/toddeTV/quick-conf"
-          },
-          {
-            "icon": "i-simple-icons-x",
-            "name": "Follow the Author",
-            "url": "https://x.com/toddeTV"
-          }
-        ],
-        "title": "About This Template"
+        "links": [],
+        "title": ""
       },
       "column4": {
         "socials": [
           {
-            "name": "toddeTV",
-            "url": "https://x.com/toddeTV"
+            "name": "PRINTED events",
+            "url": "https://www.youtube.com/@printed-europe",
+            "icon": "i-tabler-brand-youtube-filled"
           },
           {
-            "name": "toddeTV",
-            "url": "https://bsky.app/profile/todde.tv"
+            "name": "PRINTED events",
+            "url": "https://www.linkedin.com/company/104095382/",
+            "icon": "i-mdi-linkedin"
           },
           {
-            "name": "toddeTV",
-            "url": "https://www.linkedin.com/in/toddetv/"
+            "name": "printedeurope",
+            "url": "https://www.instagram.com/printedeurope/",
+            "icon": "i-mdi-instagram"
           },
           {
-            "name": "toddeTV",
-            "url": "https://github.com/toddeTV/"
+            "name": "printedeurope",
+            "url": "https://www.tiktok.com/@printedeurope",
+            "icon": "i-ic-baseline-tiktok"
           }
         ]
       }
@@ -70,17 +47,17 @@
   },
   "general": {
     "conferenceFoundingYear": 2025,
-    "conferenceName": "Quick Conf",
+    "conferenceName": "PRINTED Hub 2025",
     "favicon": {
-      "dark": "/favicon/favicon.svg",
-      "light": "/favicon/favicon.svg"
+      "dark": "/printed-pd-02.png",
+      "light": "/printed-pd-02.png"
     },
     "logo": {
-      "dark": "/logo/dark.svg",
-      "light": "/logo/light.svg"
+      "dark": "/printed-pd-02.png",
+      "light": "/printed-pd-02.png"
     },
-    "siteUrl": "https://quick-conf.com",
-    "timeZone": "Europe/Amsterdam"
+    "siteUrl": "https://hub25.printed-europe.com",
+    "timeZone": "Europe/Berlin"
   },
   "nuxtStudio": {
     "i18n": {
@@ -88,21 +65,21 @@
     },
     "repository": {
       "branch": "main",
-      "owner": "toddeTV",
+      "owner": "PRINTED-events",
       "provider": "github",
-      "repo": "quick-conf"
+      "repo": "hub25"
     }
   },
   "nuxtUI": {
     "colors": {
-      "neutral": "slate",
-      "primary": "green"
+      "neutral": "neutral",
+      "primary": "brand"
     }
   },
   "ogImage": {
     "bgDark": "#0f172a",
-    "bgLight": "#ffffff",
-    "primary": "#22c55e",
+    "bgLight": "#0f172a",
+    "primary": "#ff914d",
     "textDark": "#94a3b8",
     "textLight": "#64748b"
   }
