@@ -46,9 +46,18 @@ const items = computed(() => [
     <template #right>
       <UButton
         class="hidden lg:inline-flex"
+        color="neutral"
+        icon="i-lucide-images"
+        label="Gallery"
+        to="/gallery"
+        variant="ghost"
+      />
+      <UButton
+        class="hidden lg:inline-flex"
         color="primary"
-        label="PRINTED Hub 2026"
-        to="https://printed-europe.com"
+        icon="i-lucide-play"
+        label="Watch Talks"
+        to="https://www.youtube.com/playlist?list=PLqJRz7k9GBbMcMnBPYPMWIhNCblq7PZA7"
         target="_blank"
         variant="solid"
       />
@@ -67,10 +76,20 @@ const items = computed(() => [
         block
         class="mb-3"
         color="primary"
-        label="PRINTED Hub 2026"
-        to="https://printed-europe.com"
+        icon="i-lucide-play"
+        label="Watch Talks"
+        to="https://www.youtube.com/playlist?list=PLqJRz7k9GBbMcMnBPYPMWIhNCblq7PZA7"
         target="_blank"
         variant="solid"
+      />
+      <UButton
+        block
+        class="mb-3"
+        color="neutral"
+        icon="i-lucide-images"
+        label="Gallery"
+        to="/gallery"
+        variant="subtle"
       />
     </template>
   </UHeader>
