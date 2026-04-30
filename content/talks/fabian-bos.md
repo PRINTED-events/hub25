@@ -4,8 +4,8 @@ type: talk
 title: 'Startupscheune & Recyclebar'
 speakers:
   - fabian-bos
-dateTime: '2025-09-27T14:00:00.000Z'
-duration: 30
+dateTime: '2025-09-27T08:30:00.000Z'
+duration: 15
 stage: stage-main
 resources:
   - url: 'https://www.youtube.com/watch?v=uxmA34DLFfY'

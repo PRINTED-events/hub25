@@ -1,11 +1,11 @@
 ---
 slug: diamantpolymer
 type: talk
-title: 'Mehr als nur Oberflächenschutz – Versiegelung im 3D Druck'
+title: 'Mehr als nur Oberflächenschutz: Versiegelung im 3D-Druck'
 speakers:
   - diamantpolymer
-dateTime: '2025-09-27T13:00:00.000Z'
-duration: 30
+dateTime: '2025-09-27T09:15:00.000Z'
+duration: 15
 stage: stage-main
 resources:
   - url: 'https://www.youtube.com/watch?v=MWQiAHS0HJU'

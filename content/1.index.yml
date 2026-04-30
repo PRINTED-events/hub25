@@ -36,10 +36,10 @@ blocks:
         text: Rüdesheim am Rhein
         label: Location
       - icon: i-lucide-users
-        text: 200+
+        text: 100+
         label: Attendees
       - icon: i-lucide-mic-2
-        text: 20+ Speakers
+        text: 6+ Speakers
         label: Content
 
   - component: AppLandingSpeakers

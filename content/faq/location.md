@@ -1,20 +1,45 @@
 ---
-title: Location & Venue
-description: Where it will take place
-order: 4
+title: Location
+description: Where PRINTED Hub 2025 took place.
+order: 2
 ---
 
-# Location & Venue
+### Rüdesheim am Rhein – Where History Meets the Rhine
 
-The location information displayed on the landing page and footer can be configured visually using **Nuxt Studio** in the `0.custom-config` settings.
+Nestled at the gateway to the UNESCO World Heritage Upper Middle Rhine Valley, Rüdesheim offered a unique blend of romantic vineyards and vibrant culture. With its world-class Riesling and historic charm, it provided the perfect scenic backdrop for PRINTED Hub 2025.
 
-## Best Practice
+### Asbachgasse – The Venue
 
-List the main location itself with the address. Also list the stages and rooms if you have multiple ones. The template itself allows you to set up stages in the data model. This is used to automatically set up multiple tracks in the schedule. The stages are not printed in an overview for themselves - that way you can use stages as stages, but also as rooms, live streams, etc.
+**Industrial Heritage meets Modern Creativity**
 
-## Example
+Located on the grounds of the former Asbach distillery, **Asbachgasse** is a revitalized industrial quarter where history and innovation converge. Its winding courtyards and rustic brick halls have been transformed into a dynamic space for culture, design, and events.
 
-This demo is set in **Amsterdam**, mainly because it's a nice place to watch paint dry.
+- **Authentic Atmosphere:** Rough industrial charm combined with modern facilities.
+- **Flexible Spaces:** Perfect for workshops, presentations, and networking.
+- **Vibrant Surroundings:** Nestled among manufactories, galleries, and gastronomy.
+- **Prime Location:** Easily accessible in the heart of the Rheingau.
 
-- **Venue**: The Old Paint Factory
-- **Coordinates**: 52.3676, 4.9041
+---
+
+### Getting There
+
+**Address**
+
+*Asbachgasse :br
+Am Rottland 6 :br
+65385 Rüdesheim am Rhein :br
+Germany*
+
+**By Car**
+
+We recommend using **Parking Lot P8** or at **Oberstrasse**, which are conveniently located nearby.
+
+**By Train (Direct)**
+
+The event location is perfectly situated just **50 meters** from the **Rüdesheim (Rhein)** train station.
+
+**The Scenic Route (via Bingen)**
+
+Take the train to **Bingen (Rhein) Hbf**. From there, enjoy a short 900m walk to the riverfront and cross the Rhine on the **passenger ferry**.
+
+Ferry info: [bingen-ruedesheimer.de](https://www.bingen-ruedesheimer.de/rheinfaehren/personenfaehre/)

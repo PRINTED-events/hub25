@@ -1,11 +1,11 @@
 ---
 slug: nerdvater
 type: talk
-title: 'Projekt AROS – Vorstellung durch Flo aka. Nerdvater'
+title: 'Projektvorstellung: Aros'
 speakers:
   - nerdvater
-dateTime: '2025-09-27T15:00:00.000Z'
-duration: 30
+dateTime: '2025-09-27T08:45:00.000Z'
+duration: 15
 stage: stage-main
 resources:
   - url: 'https://www.youtube.com/watch?v=W1RLpcaAt3I'
