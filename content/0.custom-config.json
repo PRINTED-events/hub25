@@ -46,6 +46,7 @@
     }
   },
   "general": {
+    "colorMode": "dark-only",
     "conferenceFoundingYear": 2025,
     "conferenceName": "PRINTED Hub 2025",
     "favicon": {

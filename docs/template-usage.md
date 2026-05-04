@@ -170,8 +170,7 @@ For easily managing the template, we provide a CLI tool to streamline the proces
    ```
 
 3. Test locally if the project runs and that there are no errors.
-4. **IMPORTANT:** The folders `/content` and `/public` contain example data not covered under the MIT license. Replace all example content in these folders with your own data before pushing, as you most likely do not have permission to redistribute the example content.<br>
-   **IMPORTANT:** Ensure that the file `public/custom-styles.css` exists and contains your own content, as it is needed!
+4. **IMPORTANT:** The file `public/custom-styles.css` must exist, as it is required by the project. A starter-safe default file is included and can be customized.
 5. Push the files that the CLI made onto the main branch of your repository.<br>
    Now you have a repository with the base code of the template online in a Git repository.
 
@@ -191,14 +190,24 @@ For easily managing the template, we provide a CLI tool to streamline the proces
 
 > [!NOTE]
 > Changes made in the CMS are only visible to you until saved in the sidebar. Save your updates to make them public. After saving, it takes about 2–10 minutes for changes to go live while the website rebuilds. Avoid saving too frequently; each save triggers a new build, and you may be charged per build depending on your hosting provider.
+>
+> Some icons can stay invisible in live preview until the next rebuild and redeploy, even when the icon name is valid; see [Icons Set in Nuxt Studio CMS](./icon-usage.md#icons-set-in-nuxt-studio-cms).
 
 ### License Compliance
 
-Please be aware that the `/content` and `/public` folders in this template contain example data, including images and text, which are not covered under the MIT license of the code.
+Please be aware that this template uses a dual-license model.
 
-**Important:** You must replace all example content in the `/content` and `/public` folders with your own assets and information to ensure you are not infringing on any copyrights or usage rights associated with the placeholder data.
+Read [LICENSE.md](../LICENSE.md) for the license information.
 
-**Essential Files**: The file `public/custom-styles.css` is required for the project to function correctly. While you must not use the provided example content directly, these files must remain in place. You should update their contents according to your project's needs (e.g., updating any variables or site-specific rules).
+### Static Asset Upload Path
+
+Store user-uploaded images and files in `/public/assets/` and reference them via `/assets/...` URLs.
+
+- Keeps one clear namespace for CMS and content media.
+- Keeps catch-all route checks focused on known static paths.
+- Makes maintenance easier when static media lives in one folder.
+
+Root-level files in `/public/` still work and are served by the app. Keep root files for web-standard entries such as `/favicon.ico`, etc.
 
 ## Updating the Template
 
@@ -213,7 +222,7 @@ If you have already set up your conference website and want to pull in the lates
    ```
 
 4. Read and confirm the first few prompts until you are in the **Main Menu**.
-5. Here, choose **Update**. Answer the questions and go through the wizard. This will ensure to set the correct name for your project and more. Be aware that everything runs smoothly without any errors. If some occur, fix them. This process is designed to safely update the core application files while preserving your custom data. Specifically, it will preserve:
+5. Here, choose **Update**. Answer the questions and go through the wizard. This will ensure to set the correct name for your project and more. Be aware that everything runs smoothly without any errors. If some occur, fix them. This process is designed to safely update the core application files while preserving your custom data. It automatically removes template-specific repository files from the downloaded template payload that are not needed in your end-project or not licensed for your use. You should create your own infrastructure files for your custom needs. Also, it will preserve from your project:
    - The `/.github/` directory (your workflows and settings)
    - The `/content/` directory (your talks, speakers, pages, etc.)
    - The `/public/` directory (your static assets)
@@ -221,10 +230,8 @@ If you have already set up your conference website and want to pull in the lates
    - The `/LICENSE.md` file
    - The `/README.md` file
    - The `.git` folder (your version control history)
-   - IDE configuration folders (e.g. `.vscode/`, `.idea/`)
+   - IDE and LLM/AI settings (e.g. `.claude/`, `CLAUDE.md`, `.cursor/`, `.vscode/`, `.idea/`)
    - Specific fields in `/package.json`: `name`, `author`, `contributors`, `description`, `repository`, `bugs`, and `keywords`
-
-   Additionally, the process automatically removes template-specific files and folders (like `docs`, `renovate.json`, and release configuration files) that are not needed in your end-project. You should create your own infrastructure files for your custom needs.
 
 6. **Migrations:**<br>
    When updating between versions, there might be breaking changes or required data structure updates. Migration guides are available to help you transition smoothly.<br>

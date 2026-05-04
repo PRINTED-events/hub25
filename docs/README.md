@@ -1,7 +1,7 @@
 # Documentation
 
 > [!IMPORTANT]
-> This documentation applies to **quick-conf v1.2.0-rc.0**. <!-- x-release-please-version -->
+> This documentation applies to **quick-conf v1.3.0-rc.0**. <!-- x-release-please-version -->
 
 > [!TIP]
 > **Looking for the documentation for your version?** You can always find the documentation matching your installed version by clicking the **version number** in the footer of your own website instance.<br>
@@ -19,6 +19,8 @@ Guides for setting up, customizing, and managing your conference website.
   - See other conferences using this template.
 - **[Customizing the Landing Page](landing-page-blocks.md)** (`landing-page-blocks.md`)
   - How to use and configure the modular landing page blocks.
+- **[Display Mode Usage](display-mode.md)** (`display-mode.md`)
+  - Quick setup guide for the `/display` signage page and shareable settings URL.
 - **[Using Icons](icon-usage.md)** (`icon-usage.md`)
   - Guide to the available icon sets and how to use them in content.
 - **[SEO Features](seo.md)** (`seo.md`)

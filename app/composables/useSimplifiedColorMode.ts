@@ -24,7 +24,7 @@ export function useSimplifiedColorMode() {
     // On the server, we cannot know the OS preference, so we default to 'light'
     // to ensure consistent SSR output and prevent hydration mismatch.
     if (import.meta.server) {
-      return 'dark'
+      return 'light'
     }
 
     // On the client, we can determine the actual system preference.
@@ -34,7 +34,7 @@ export function useSimplifiedColorMode() {
     }
     catch {
       // just to be really sure
-      return 'dark'
+      return 'light'
     }
   })
 
