@@ -4,7 +4,7 @@ useSeoMeta({
   description: 'Photos from PRINTED Hub 2025 in Rüdesheim am Rhein.',
 })
 
-const images = [
+const allImages = [
   '/gallery/printedhub25-007.jpg',
   '/gallery/printedhub25-010.jpg',
   '/gallery/printedhub25-011.jpg',
@@ -47,6 +47,17 @@ const images = [
   '/gallery/printedhub25-123.jpg',
   '/gallery/printedhub25-131.jpg',
 ]
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
+const images = shuffle(allImages)
 
 const lightboxIndex = ref<number | null>(null)
 
